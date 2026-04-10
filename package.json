@@ -1,0 +1,9 @@
+{
+  "name": "glm-coding-plan-trigger",
+  "private": true,
+  "version": "1.0.0",
+  "description": "GitHub Actions automation to trigger GLM Coding Plan daily.",
+  "scripts": {
+    "test": "node --test --experimental-test-isolation=none tests/trigger-glm-coding-plan.test.mjs"
+  }
+}
