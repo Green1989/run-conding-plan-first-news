@@ -37,10 +37,10 @@ test('buildRequestBody creates the minimal GLM Coding request payload', async ()
   ]);
 });
 
-test('extractAssistantText returns the first assistant message content', async () => {
-  const { extractAssistantText } = await loadScriptModule();
+test('describeSuccess returns the first assistant message content when present', async () => {
+  const { describeSuccess } = await loadScriptModule();
 
-  const content = extractAssistantText({
+  const content = describeSuccess({
     choices: [
       {
         message: {
@@ -106,6 +106,44 @@ test('callWithRetry retries twice before succeeding on the third attempt', async
   assert.equal(result.attempts, 3);
   assert.equal(result.content, 'OK');
   assert.deepEqual(sleepCalls, [10, 10]);
+});
+
+test('callWithRetry treats a 2xx response without assistant text as success', async () => {
+  const { callWithRetry } = await loadScriptModule();
+
+  const result = await callWithRetry({
+    apiKey: 'test-key',
+    retries: 3,
+    retryDelayMs: 10,
+    fetchImpl: async () => ({
+      ok: true,
+      status: 200,
+      async json() {
+        return {
+          id: 'chatcmpl-triggered',
+          request_id: 'req-triggered',
+          choices: [
+            {
+              message: {
+                role: 'assistant',
+                content: null,
+              },
+            },
+          ],
+        };
+      },
+    }),
+    sleepImpl: async () => {},
+    logger: {
+      info() {},
+      warn() {},
+      error() {},
+    },
+  });
+
+  assert.equal(result.attempts, 1);
+  assert.equal(result.content, '[no assistant text returned]');
+  assert.equal(result.payload.request_id, 'req-triggered');
 });
 
 test('isDirectExecution recognizes a relative CLI script path', async () => {

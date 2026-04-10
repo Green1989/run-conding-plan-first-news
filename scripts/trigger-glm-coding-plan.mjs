@@ -24,14 +24,22 @@ export function buildRequestBody({
   };
 }
 
-export function extractAssistantText(payload) {
+export function describeSuccess(payload) {
   const content = payload?.choices?.[0]?.message?.content;
 
-  if (typeof content !== 'string' || content.trim() === '') {
-    throw new Error('GLM response did not include assistant text content.');
+  if (typeof content === 'string' && content.trim() !== '') {
+    return content.trim();
   }
 
-  return content.trim();
+  if (typeof payload?.request_id === 'string' && payload.request_id.trim() !== '') {
+    return '[no assistant text returned]';
+  }
+
+  if (typeof payload?.id === 'string' && payload.id.trim() !== '') {
+    return '[no assistant text returned]';
+  }
+
+  return '[successful response without assistant text]';
 }
 
 export function sleep(ms) {
@@ -71,7 +79,7 @@ async function callOnce({
   }
 
   const payload = await response.json();
-  const content = extractAssistantText(payload);
+  const content = describeSuccess(payload);
 
   return {
     content,

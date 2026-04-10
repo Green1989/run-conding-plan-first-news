@@ -7,7 +7,7 @@ This repository keeps the GLM Coding Plan usage window anchored by sending one m
 - Runs once per day at Beijing time `05:00`
 - Uses GitHub Actions instead of a local computer
 - Calls the GLM Coding base URL `https://open.bigmodel.cn/api/coding/paas/v4`
-- Treats the run as successful as long as one API call succeeds
+- Treats the run as successful as long as one API call returns HTTP 2xx, even if no assistant text is returned
 - Retries up to 3 attempts, waiting 1 minute between failures
 - Keeps `workflow_dispatch` enabled for a manual trigger when you want to verify the setup
 
@@ -35,6 +35,7 @@ Default request behavior:
 
 - Model: `glm-4.7`
 - Prompt: `Please reply with OK only.`
+- Success rule: any HTTP 2xx response counts as a successful trigger
 
 You can override these values with optional environment variables if you ever need to adjust them:
 
