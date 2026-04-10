@@ -4,7 +4,7 @@ This repository keeps the GLM Coding Plan usage window anchored by sending one m
 
 ## What it does
 
-- Runs once per day at Beijing time `05:00`
+- Runs twice per day at Beijing time `05:00` and `10:30`
 - Uses GitHub Actions instead of a local computer
 - Calls the GLM Coding base URL `https://open.bigmodel.cn/api/coding/paas/v4`
 - Treats the run as successful as long as one API call returns HTTP 2xx, even if no assistant text is returned
@@ -13,10 +13,16 @@ This repository keeps the GLM Coding Plan usage window anchored by sending one m
 
 ## Time conversion
 
-GitHub Actions cron uses UTC. Beijing time `05:00` maps to `21:00 UTC` on the previous day, so the workflow uses:
+GitHub Actions cron uses UTC. The workflow keeps two daily trigger points:
+
+- Beijing time `05:00` -> `21:00 UTC` on the previous day
+- Beijing time `10:30` -> `02:30 UTC` on the same day
+
+So the workflow uses:
 
 ```yaml
 cron: '0 21 * * *'
+cron: '30 2 * * *'
 ```
 
 ## Required setup

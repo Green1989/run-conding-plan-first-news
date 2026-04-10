@@ -158,11 +158,12 @@ test('isDirectExecution recognizes a relative CLI script path', async () => {
   assert.equal(result, true);
 });
 
-test('workflow config schedules the job for 05:00 Beijing time and wires the secret', async () => {
+test('workflow config schedules the job for 05:00 and 10:30 Beijing time and wires the secret', async () => {
   const workflow = await fs.readFile(workflowPath, 'utf8');
 
   assert.match(workflow, /workflow_dispatch:/);
   assert.match(workflow, /cron:\s*'0 21 \* \* \*'/);
+  assert.match(workflow, /cron:\s*'30 2 \* \* \*'/);
   assert.match(workflow, /GLM_API_KEY:\s*\$\{\{\s*secrets\.GLM_API_KEY\s*\}\}/);
   assert.match(workflow, /node\s+scripts\/trigger-glm-coding-plan\.mjs/);
 });
@@ -172,7 +173,9 @@ test('README documents the required secret, UTC conversion, retries, and manual 
 
   assert.match(readme, /GLM_API_KEY/);
   assert.match(readme, /05:00/);
+  assert.match(readme, /10:30/);
   assert.match(readme, /21:00 UTC/);
+  assert.match(readme, /02:30 UTC/);
   assert.match(readme, /3\s+times|3\s+attempts/);
   assert.match(readme, /workflow_dispatch|manual trigger/i);
 });

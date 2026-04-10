@@ -3,6 +3,7 @@ name: GLM Coding Plan Trigger
 on:
   schedule:
     - cron: '0 21 * * *'
+    - cron: '30 2 * * *'
   workflow_dispatch:
 
 jobs:
