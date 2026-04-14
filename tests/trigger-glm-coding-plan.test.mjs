@@ -158,18 +158,18 @@ test('isDirectExecution recognizes a relative CLI script path', async () => {
   assert.equal(result, true);
 });
 
-test('workflow config schedules the job for 05:00 and repeated 08:00-11:00 Beijing time checkpoints', async () => {
+test('workflow config schedules the job for 05:00 Beijing time only', async () => {
   const workflow = await fs.readFile(workflowPath, 'utf8');
 
   assert.match(workflow, /workflow_dispatch:/);
   assert.match(workflow, /cron:\s*'0 21 \* \* \*'/);
-  assert.match(workflow, /cron:\s*'0 0 \* \* \*'/);
-  assert.match(workflow, /cron:\s*'30 0 \* \* \*'/);
-  assert.match(workflow, /cron:\s*'0 1 \* \* \*'/);
-  assert.match(workflow, /cron:\s*'30 1 \* \* \*'/);
-  assert.match(workflow, /cron:\s*'0 2 \* \* \*'/);
-  assert.match(workflow, /cron:\s*'30 2 \* \* \*'/);
-  assert.match(workflow, /cron:\s*'0 3 \* \* \*'/);
+  assert.doesNotMatch(workflow, /cron:\s*'0 0 \* \* \*'/);
+  assert.doesNotMatch(workflow, /cron:\s*'30 0 \* \* \*'/);
+  assert.doesNotMatch(workflow, /cron:\s*'0 1 \* \* \*'/);
+  assert.doesNotMatch(workflow, /cron:\s*'30 1 \* \* \*'/);
+  assert.doesNotMatch(workflow, /cron:\s*'0 2 \* \* \*'/);
+  assert.doesNotMatch(workflow, /cron:\s*'30 2 \* \* \*'/);
+  assert.doesNotMatch(workflow, /cron:\s*'0 3 \* \* \*'/);
   assert.match(workflow, /GLM_API_KEY:\s*\$\{\{\s*secrets\.GLM_API_KEY\s*\}\}/);
   assert.match(workflow, /node\s+scripts\/trigger-glm-coding-plan\.mjs/);
 });
@@ -179,21 +179,21 @@ test('README documents the required secret, UTC conversion, retries, and manual 
 
   assert.match(readme, /GLM_API_KEY/);
   assert.match(readme, /05:00/);
-  assert.match(readme, /08:00/);
-  assert.match(readme, /08:30/);
-  assert.match(readme, /09:00/);
-  assert.match(readme, /09:30/);
-  assert.match(readme, /10:00/);
-  assert.match(readme, /10:30/);
-  assert.match(readme, /11:00/);
   assert.match(readme, /21:00 UTC/);
-  assert.match(readme, /00:00 UTC/);
-  assert.match(readme, /00:30 UTC/);
-  assert.match(readme, /01:00 UTC/);
-  assert.match(readme, /01:30 UTC/);
-  assert.match(readme, /02:00 UTC/);
-  assert.match(readme, /02:30 UTC/);
-  assert.match(readme, /03:00 UTC/);
+  assert.doesNotMatch(readme, /08:00/);
+  assert.doesNotMatch(readme, /08:30/);
+  assert.doesNotMatch(readme, /09:00/);
+  assert.doesNotMatch(readme, /09:30/);
+  assert.doesNotMatch(readme, /10:00/);
+  assert.doesNotMatch(readme, /10:30/);
+  assert.doesNotMatch(readme, /11:00/);
+  assert.doesNotMatch(readme, /00:00 UTC/);
+  assert.doesNotMatch(readme, /00:30 UTC/);
+  assert.doesNotMatch(readme, /01:00 UTC/);
+  assert.doesNotMatch(readme, /01:30 UTC/);
+  assert.doesNotMatch(readme, /02:00 UTC/);
+  assert.doesNotMatch(readme, /02:30 UTC/);
+  assert.doesNotMatch(readme, /03:00 UTC/);
   assert.match(readme, /3\s+times|3\s+attempts/);
   assert.match(readme, /workflow_dispatch|manual trigger/i);
 });
